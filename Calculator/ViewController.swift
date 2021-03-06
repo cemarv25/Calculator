@@ -5,6 +5,12 @@
 //  Created by user188731 on 2/19/21.
 //
 
+extension Double {
+    var clean: String {
+       return self.truncatingRemainder(dividingBy: 1) == 0 ? String(format: "%.0f", self) : String(self)
+    }
+}
+
 import UIKit
 
 class ViewController: UIViewController {
@@ -37,9 +43,11 @@ class ViewController: UIViewController {
     @IBAction func processNumber(_ sender: UIButton) {
             if let numberText = sender.titleLabel?.text {
                 if !delResultText {
-                    if (resultLabel.text == "0") {
+                    if resultLabel.text == "0" && numberText != "." {
                         resultLabel.text = numberText
-                    } else {
+                    } else if numberText != "." {
+                        resultLabel.text = resultLabel.text! + numberText
+                    } else if !resultLabel.text!.contains(".") {
                         resultLabel.text = resultLabel.text! + numberText
                     }
                 } else {
@@ -54,7 +62,7 @@ class ViewController: UIViewController {
         let x = Double(current)
         let y = Double(resultLabel.text!)
         let result = calculate(x: x!, y: y!, operation: operation)
-        resultLabel.text = String(result)
+        resultLabel.text = result.clean
         current = "0"
         delResultText = true
         operation = ""
@@ -79,8 +87,8 @@ class ViewController: UIViewController {
                 let x = Double(current)
                 let y = Double(resultLabel.text!)
                 let result = calculate(x: x!, y: y!, operation: operation)
-                current = String(result)
-                resultLabel.text = String(result)
+                current = result.clean
+                resultLabel.text = result.clean
                 operation = operationText
                 delResultText = true
             }
